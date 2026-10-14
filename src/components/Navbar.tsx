@@ -1,7 +1,6 @@
 import React from 'react';
 import { BookOpen, Plus, LayoutDashboard, FileText, Sun, Moon, Settings, FolderOpen } from 'lucide-react';
 import { ViewMode } from '../types';
-import { PWAInstallButton } from './PWAInstallButton';
 
 interface NavbarProps {
   currentView: ViewMode;
@@ -97,9 +96,6 @@ export const Navbar: React.FC<NavbarProps> = ({
 
         {/* Action buttons & Theme toggle */}
         <div className="flex items-center gap-1.5 sm:gap-2">
-          {/* Quick Install to Phone / Device */}
-          <PWAInstallButton />
-
           {/* Theme Quick Toggle */}
           <button
             id="nav-theme-toggle-btn"

@@ -30,7 +30,14 @@ export function useTheme() {
   // Apply theme to DOM and meta tag
   const applyTheme = useCallback((activeTheme: ThemeMode) => {
     const root = document.documentElement;
-    const systemPrefersDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
+    let systemPrefersDark = false;
+    try {
+      if (typeof window !== 'undefined' && window.matchMedia) {
+        systemPrefersDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
+      }
+    } catch {
+      systemPrefersDark = false;
+    }
     const effectiveDark = activeTheme === 'dark' || (activeTheme === 'system' && systemPrefersDark);
 
     setIsDark(effectiveDark);
@@ -76,17 +83,33 @@ export function useTheme() {
   useEffect(() => {
     applyTheme(theme);
 
-    const mediaQuery = window.matchMedia('(prefers-color-scheme: dark)');
-    const handleSystemChange = () => {
-      if (theme === 'system') {
-        applyTheme('system');
-      }
-    };
+    if (typeof window === 'undefined' || !window.matchMedia) {
+      return;
+    }
 
-    mediaQuery.addEventListener('change', handleSystemChange);
-    return () => {
-      mediaQuery.removeEventListener('change', handleSystemChange);
-    };
+    try {
+      const mediaQuery = window.matchMedia('(prefers-color-scheme: dark)');
+      const handleSystemChange = () => {
+        if (theme === 'system') {
+          applyTheme('system');
+        }
+      };
+
+      if (typeof mediaQuery.addEventListener === 'function') {
+        mediaQuery.addEventListener('change', handleSystemChange);
+        return () => {
+          mediaQuery.removeEventListener('change', handleSystemChange);
+        };
+      } else if (typeof (mediaQuery as any).addListener === 'function') {
+        // Fallback for older Safari and mobile WebViews
+        (mediaQuery as any).addListener(handleSystemChange);
+        return () => {
+          (mediaQuery as any).removeListener(handleSystemChange);
+        };
+      }
+    } catch (err) {
+      console.warn('System dark mode listener not supported:', err);
+    }
   }, [theme, applyTheme]);
 
   return {

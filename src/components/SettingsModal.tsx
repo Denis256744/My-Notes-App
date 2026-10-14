@@ -15,7 +15,6 @@ import {
 import { Note, ThemeMode, ImportedFile } from '../types';
 import { formatFileSize } from '../utils/fileHelper';
 import { exportNotesAsJson, shareOrSaveFile } from '../utils/exportHelper';
-import { PWAInstallButton } from './PWAInstallButton';
 
 interface SettingsModalProps {
   isOpen: boolean;
@@ -274,14 +273,6 @@ export const SettingsModal: React.FC<SettingsModalProps> = ({
                 </div>
               </button>
             </div>
-          </section>
-
-          {/* Device & Phone App Installation */}
-          <section className="space-y-3 pt-4 border-t border-slate-100 dark:border-slate-800">
-            <label className="block text-xs font-semibold uppercase tracking-wider text-slate-500 dark:text-slate-400">
-              Install to Phone / Desktop
-            </label>
-            <PWAInstallButton variant="card" />
           </section>
 
           {/* Backup & Import/Export Section */}

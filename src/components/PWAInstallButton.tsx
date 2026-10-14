@@ -1,15 +1,16 @@
 import React, { useState } from 'react';
-import { Download, Share2, X, Smartphone, Check, HelpCircle } from 'lucide-react';
+import { Download, Share2, X, Smartphone, Check } from 'lucide-react';
 import { usePWAInstall } from '../hooks/usePWAInstall';
 
-interface PWAInstallButtonProps {
-  variant?: 'button' | 'card';
-}
-
-export const PWAInstallButton: React.FC<PWAInstallButtonProps> = ({ variant = 'button' }) => {
+export const PWAInstallButton: React.FC = () => {
   const { isInstallable, isInstalled, isIOS, install } = usePWAInstall();
   const [showGuide, setShowGuide] = useState(false);
   const [justInstalled, setJustInstalled] = useState(false);
+
+  // If already running inside standalone PWA window, suppress install prompt
+  if (isInstalled) {
+    return null;
+  }
 
   const handleInstallClick = async () => {
     if (isInstallable) {
@@ -24,59 +25,26 @@ export const PWAInstallButton: React.FC<PWAInstallButtonProps> = ({ variant = 'b
     }
   };
 
-  // If already running inside standalone PWA window
-  if (isInstalled && variant === 'button') {
-    return null;
-  }
-
   return (
     <>
-      {variant === 'card' ? (
-        <button
-          type="button"
-          id="settings-install-app-card"
-          onClick={handleInstallClick}
-          className="w-full flex items-center justify-between p-3.5 rounded-2xl border border-amber-300 dark:border-amber-700/60 bg-amber-50/70 dark:bg-amber-950/30 hover:bg-amber-100/70 dark:hover:bg-amber-950/50 text-left transition-all cursor-pointer"
-        >
-          <div className="flex items-center gap-3">
-            <div className="w-9 h-9 rounded-xl bg-amber-500 text-slate-950 flex items-center justify-center shrink-0 shadow-xs">
-              <Smartphone className="w-5 h-5" />
-            </div>
-            <div>
-              <span className="font-semibold text-xs sm:text-sm text-slate-900 dark:text-white block">
-                {isInstalled ? 'App Installed on Device' : 'Install to Phone / Home Screen'}
-              </span>
-              <span className="text-[11px] text-slate-600 dark:text-slate-400 block">
-                {isInstalled
-                  ? 'Running as installed application with offline access'
-                  : 'Fast 1-tap install on Android & iOS • Works offline'}
-              </span>
-            </div>
-          </div>
-          <span className="text-xs font-semibold text-amber-800 dark:text-amber-300 shrink-0 px-2.5 py-1 bg-amber-200/80 dark:bg-amber-900/60 rounded-xl">
-            {isInstalled ? 'Installed' : 'Install'}
-          </span>
-        </button>
-      ) : (
-        <button
-          id="pwa-install-button"
-          onClick={handleInstallClick}
-          title="Install My Notes to your device home screen"
-          className="inline-flex items-center gap-1.5 bg-amber-500 hover:bg-amber-400 active:bg-amber-600 text-slate-950 font-semibold px-2.5 py-1.5 sm:px-3 sm:py-2 rounded-xl text-xs sm:text-sm shadow-xs transition-all hover:shadow-sm focus:outline-hidden focus-visible:ring-2 focus-visible:ring-amber-500 cursor-pointer"
-        >
-          {justInstalled ? (
-            <>
-              <Check className="w-3.5 h-3.5 sm:w-4 sm:h-4 text-slate-950 stroke-[2.5]" />
-              <span>Installed</span>
-            </>
-          ) : (
-            <>
-              <Download className="w-3.5 h-3.5 sm:w-4 sm:h-4 text-slate-950 stroke-[2.5]" />
-              <span>Install App</span>
-            </>
-          )}
-        </button>
-      )}
+      <button
+        id="pwa-install-button"
+        onClick={handleInstallClick}
+        title="Install My Notes to your device home screen"
+        className="inline-flex items-center gap-1.5 bg-amber-500 hover:bg-amber-400 active:bg-amber-600 text-slate-950 font-semibold px-3 py-1.5 sm:px-3.5 sm:py-2 rounded-xl text-xs sm:text-sm shadow-xs transition-all hover:shadow-sm focus:outline-hidden focus-visible:ring-2 focus-visible:ring-amber-500"
+      >
+        {justInstalled ? (
+          <>
+            <Check className="w-3.5 h-3.5 sm:w-4 sm:h-4 text-slate-950 stroke-[2.5]" />
+            <span>Installed</span>
+          </>
+        ) : (
+          <>
+            <Download className="w-3.5 h-3.5 sm:w-4 sm:h-4 text-slate-950 stroke-[2.5]" />
+            <span>Install App</span>
+          </>
+        )}
+      </button>
 
       {/* Guidance Modal for browsers that require menu install or iOS */}
       {showGuide && (

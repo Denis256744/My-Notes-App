@@ -29,6 +29,7 @@ import { DeleteConfirmModal } from './components/DeleteConfirmModal';
 import { FilePreviewModal } from './components/FilePreviewModal';
 import { SettingsModal } from './components/SettingsModal';
 import { OfflineIndicator } from './components/OfflineIndicator';
+import { InstallPromptBanner } from './components/InstallPromptBanner';
 import { useTheme } from './hooks/useTheme';
 import { CheckCircle2 } from 'lucide-react';
 
@@ -512,6 +513,9 @@ export default function App() {
 
       {/* Offline Status Indicator */}
       <OfflineIndicator />
+
+      {/* 1-Tap Mobile Phone Install Banner */}
+      <InstallPromptBanner />
 
       {/* Footer */}
       <footer className="mt-auto border-t border-slate-200/80 dark:border-slate-800/80 bg-white/60 dark:bg-slate-900/60 backdrop-blur-xs py-6 px-4 transition-colors">
